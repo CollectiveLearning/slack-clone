@@ -54,6 +54,10 @@ GEM
     globalid (0.4.0)
       activesupport (>= 4.2.0)
     i18n (0.8.6)
+    jsonapi-resources (0.9.0)
+      activerecord (>= 4.1)
+      concurrent-ruby
+      railties (>= 4.1)
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -150,6 +154,7 @@ PLATFORMS
 DEPENDENCIES
   byebug
   factory_girl_rails
+  jsonapi-resources
   listen (~> 3.0.5)
   pg (~> 0.18)
   puma (~> 3.0)
