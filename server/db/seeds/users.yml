@@ -1,0 +1,19 @@
+- username: Gato
+  email: gato@gmail.com
+  photo_url: http://lorempixel.com/400/200/cats/
+  password_digest: gato1
+
+- username: Perro
+  email: perro@gmail.com
+  photo_url: http://lorempixel.com/400/200/cats/
+  password_digest: perro
+
+- username: Elefante
+  email: elefante@gmail.com
+  photo_url: http://lorempixel.com/400/200/cats/
+  password_digest: elefante
+
+- username: Jirafa
+  email: jirafa@gmail.com
+  photo_url: http://lorempixel.com/400/200/cats/
+  password_digest: jirafa
