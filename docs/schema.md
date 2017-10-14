@@ -7,7 +7,7 @@
 | username        | `string` | `unique` `presence` |
 | email           | `string` | `unique` `presence` |
 | photo_url       | `string` | `string`            |
-| password_digest | `string` | `unique` `presence` |
+| password_digest | `string` |          `presence` |
 
 - **Has Many**
   - Subscriptions
