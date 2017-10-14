@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe User, type: :model do
   describe "Attributes" do
     it { is_expected.to have_attribute :email }
@@ -9,9 +7,20 @@ RSpec.describe User, type: :model do
   end
 
   describe "Validations" do
-    it { is_expected.to validate_uniqueness_of :email }
-    it { is_expected.to validate_uniqueness_of :username }
-    it { is_expected.to validate_uniqueness_of :password_digest }
+
+    it "validates the uniqueness of email" do
+      original = FactoryGirl.create(:user, email: "my-email@mymail.com")
+      duplicate = FactoryGirl.build(:user, email: original.email)
+      duplicate.valid?
+      expect(duplicate.errors[:email]).to include "has already been taken"
+    end
+
+    it "validates the uniqueness of username" do
+      original = FactoryGirl.create(:user, username: "my-username")
+      duplicate = FactoryGirl.build(:user, username: original.username)
+      duplicate.valid?
+      expect(duplicate.errors[:username]).to include "has already been taken"
+    end
   end
 
   describe "Relations" do
