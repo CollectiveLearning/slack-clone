@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Message, type: :model do
   describe "Attributes" do
     #[:content, :type].each do |attr|
-    %i(content type).each do |attr|
+    %i(content type channel_id user_id).each do |attr|
       it { is_expected.to have_attribute attr }
     end
   end

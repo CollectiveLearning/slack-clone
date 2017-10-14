@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :subscription do
-    user nil
-    channel nil
+    association :user, strategy: :build
+    association :channel, strategy: :build
   end
 end
