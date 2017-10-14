@@ -24,4 +24,9 @@ RSpec.describe Channel, type: :model do
     end
   end
 
+  describe "Relations" do
+        it { is_expected.to have_many :subscriptions }
+        it { is_expected.to have_many :messages }
+        it { is_expected.to have_many :users }
+  end
 end

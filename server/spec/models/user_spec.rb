@@ -24,6 +24,8 @@ RSpec.describe User, type: :model do
   end
 
   describe "Relations" do
-    pending "are missing, add examples!"
+        it { is_expected.to have_many :subscriptions }
+        it { is_expected.to have_many :messages }
+        it { is_expected.to have_many :channels }
   end
 end
