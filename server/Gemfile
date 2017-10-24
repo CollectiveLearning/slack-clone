@@ -15,6 +15,7 @@ gem 'jsonapi-resources'
 gem 'doorkeeper'
 gem 'bcrypt'
 gem 'doorkeeper-jwt'
+gem 'apitome'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -29,6 +30,7 @@ group :development do
   gem 'spring'
   gem 'spring-commands-rspec'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'rspec_api_documentation'
 end
 
 group :test do

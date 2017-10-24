@@ -1,4 +1,4 @@
-gstmodule V1
+module V1
   class BaseResource < JSONAPI::Resource
     abstract
 
