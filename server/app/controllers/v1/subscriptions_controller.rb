@@ -1,4 +1,4 @@
-module V1 do
+module V1
   class SubscriptionsController < ApplicationController
   end
 end

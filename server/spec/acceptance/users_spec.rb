@@ -123,7 +123,7 @@ RSpec.resource "Users" do
     end
   end
 
-  delete "v1/users/:id" do
+  delete "/v1/users/:id" do
     let(:id) { user.id }
 
     example_request "Deleting an user" do

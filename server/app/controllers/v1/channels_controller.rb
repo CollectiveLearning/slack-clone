@@ -1,4 +1,5 @@
-module V1 do
+module V1
   class ChannelsController < ApplicationController
   end
 end
+
