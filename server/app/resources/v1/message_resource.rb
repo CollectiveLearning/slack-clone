@@ -2,7 +2,7 @@ module V1
   class MessageResource < BaseResource
     attribute :content
 
-    attribute :type
+    attribute :kind
 
     has_one :user
 
