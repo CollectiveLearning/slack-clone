@@ -51,8 +51,6 @@ GEM
     diff-lcs (1.3)
     doorkeeper (4.2.6)
       railties (>= 4.2)
-    doorkeeper-jwt (0.2.1)
-      jwt (~> 1.5.2, >= 1.5.2)
     erubis (2.7.0)
     factory_girl (4.8.1)
       activesupport (>= 3.0.0)
@@ -177,9 +175,9 @@ DEPENDENCIES
   bcrypt
   byebug
   doorkeeper
-  doorkeeper-jwt
   factory_girl_rails
   jsonapi-resources
+  jwt
   listen (~> 3.0.5)
   pg (~> 0.18)
   puma (~> 3.0)
