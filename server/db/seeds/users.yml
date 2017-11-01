@@ -1,19 +1,23 @@
 - username: Gato
   email: gato@gmail.com
   photo_url: http://lorempixel.com/400/200/cats/
-  password_digest: gato1
+  password: gato1
+  password_confirmation: gato1
 
 - username: Perro
   email: perro@gmail.com
   photo_url: http://lorempixel.com/400/200/cats/
-  password_digest: perro
+  password: perro
+  password_confirmation: perro
 
 - username: Elefante
   email: elefante@gmail.com
   photo_url: http://lorempixel.com/400/200/cats/
-  password_digest: elefante
+  password: elefante
+  password_confirmation: elefante
 
 - username: Jirafa
   email: jirafa@gmail.com
   photo_url: http://lorempixel.com/400/200/cats/
-  password_digest: jirafa
+  password: jirafa
+  password_confirmation: jirafa
