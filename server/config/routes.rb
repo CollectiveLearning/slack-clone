@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
-  use_doorkeeper
-
   namespace :v1 do
+    post 'login', to: 'authenticate#login', as: :login
     jsonapi_resources :users
     jsonapi_resources :channels
     jsonapi_resources :messages
