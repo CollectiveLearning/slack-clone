@@ -6,7 +6,9 @@ module V1
 
     attribute :photo_url
 
-    attribute :password_digest
+    attribute :password
+
+    attribute :password_confirmation
 
     has_many :subscriptions
 
@@ -16,7 +18,7 @@ module V1
 
     class << self
       def creatable_fields(context)
-        super - [:subscriptions, :messages, :channels]
+        super - [:subscriptions, :messages, :channels, :password_digest]
       end
       alias_method :updatable_fields, :creatable_fields
     end

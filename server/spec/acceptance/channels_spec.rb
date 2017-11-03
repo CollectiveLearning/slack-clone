@@ -1,6 +1,16 @@
 require 'acceptance_helper'
 
 RSpec.resource "Channels" do
+  let (:password) { "my-password" }
+  let(:user) { FactoryGirl.create(:user, password: password, password_confirmation: password) }
+  let(:mytoken) { AuthenticateUser.new(user.username, password).call.result[:token] }
+
+  # before(:all) do
+  #   @token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiZGF2aWQiLCJlbWFpbCI6ImVvQGVvLmVvLmNvbSIsInBob3RvX3VybCI6bnVsbCwiZXhwIjoxNTA5ODA0MDM0fQ.aEas6_YoEWJTuItsAYp-HnZLQ1Xy99J7TYO0pUyOMgw"
+  # end
+
+  header "Content-Type", 'application/vnd.api+json'
+  header "Accept", "application/vnd.api+json"
 
   let(:channel) { FactoryGirl.create(:channel) }
 
@@ -13,6 +23,7 @@ RSpec.resource "Channels" do
       5.times do |i|
         FactoryGirl.create(:channel)
       end
+      header 'Authorization', mytoken
     end
 
     example_request "Getting a list of channels" do
@@ -27,16 +38,19 @@ RSpec.resource "Channels" do
   end
 
   head "/v1/channels" do
+    before do
+      header 'Authorization', mytoken
+    end
     example_request "Getting the headers" do
       expect(response_headers["Cache-Control"]).to eq("max-age=0, private, must-revalidate")
       expect(response_headers["Content-Type"]).to eq("application/vnd.api+json")
     end
   end
 
-  header "Content-Type", 'application/vnd.api+json'
-  header "Accept", "application/vnd.api+json"
-
   post "/v1/channels" do
+    before do
+      header 'Authorization', mytoken
+    end
 
     # http://jsonapi.org/format/#crud-creating
     parameter :type, "Resource type, allways be channels", :required => true, :scope => :data
@@ -57,7 +71,7 @@ RSpec.resource "Channels" do
 
     let(:raw_post) { params.to_json }
 
-    example_request "Creating an channel" do
+    example_request "Creating a channel" do
       explanation "First, create an channel, then make a later request to get it back"
 
       obj = JSON.parse(response_body)["data"]["attributes"]
@@ -72,6 +86,10 @@ RSpec.resource "Channels" do
   end
 
   get "/v1/channels/:id" do
+    before do
+      header 'Authorization', mytoken
+    end
+
     let(:id) { channel.id }
 
     example_request "Getting a specific channel" do
@@ -88,6 +106,9 @@ RSpec.resource "Channels" do
   end
 
   patch "/v1/channels/:id" do
+    before do
+      header 'Authorization', mytoken
+    end
 
     # http://jsonapi.org/format/#crud-updating
     parameter :type, "Resource type, allways be channels", :required => true, :scope => :data
@@ -116,6 +137,10 @@ RSpec.resource "Channels" do
   end
 
   delete "v1/channels/:id" do
+    before do
+      header 'Authorization', mytoken
+    end
+
     let(:id) { channel.id }
 
     example_request "Deleting a channel" do

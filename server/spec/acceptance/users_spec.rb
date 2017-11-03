@@ -1,8 +1,14 @@
 require 'acceptance_helper'
 
 RSpec.resource "Users" do
+  header "Content-Type", 'application/vnd.api+json'
+  header "Accept", "application/vnd.api+json"
 
+  let (:password) { "my-password" }
   let(:user) { FactoryGirl.create(:user) }
+
+  let(:token_user) { FactoryGirl.create(:user, password: password, password_confirmation: password) }
+  let(:mytoken) { AuthenticateUser.new(token_user.username, password).call.result[:token] }
 
   get "/v1/users" do
     parameter :page, "Current page of users"
@@ -13,6 +19,7 @@ RSpec.resource "Users" do
       5.times do |i|
         FactoryGirl.create(:user)
       end
+      header 'Authorization', mytoken
     end
 
     example_request "Getting a list of users" do
@@ -27,16 +34,19 @@ RSpec.resource "Users" do
   end
 
   head "/v1/users" do
+    before do
+      header 'Authorization', mytoken
+    end
     example_request "Getting the headers" do
       expect(response_headers["Cache-Control"]).to eq("max-age=0, private, must-revalidate")
       expect(response_headers["Content-Type"]).to eq("application/vnd.api+json")
     end
   end
 
-  header "Content-Type", 'application/vnd.api+json'
-  header "Accept", "application/vnd.api+json"
-
   post "/v1/users" do
+    before do
+      header 'Authorization', mytoken
+    end
 
     # http://jsonapi.org/format/#crud-creating
     parameter :type, "Resource type, allways be users", :required => true, :scope => :data
@@ -44,19 +54,20 @@ RSpec.resource "Users" do
     parameter "username", 'Application user identifier', :required => true, :scope => [:data, :attributes]
     parameter "email", "User email", :required => true, :scope => [:data, :attributes]
     parameter "photo-url", "URL for user avatar", :required => false, :scope => [:data, :attributes]
-    parameter "password-digest", "Encoded user password", :required => true, :scope => [:data, :attributes]
+    parameter "password", "User password", :required => true, :scope => [:data, :attributes]
+    parameter "password-confirmation", "User password confirmation", :required => true, :scope => [:data, :attributes]
 
     response_field "username", "Application user identifier", :scope => :attributes, "Type" => "String"
     response_field "email", "User email", :scope => :attributes, "Type" => "String"
     response_field "photo-url", "URL for user avatar", :scope => :attributes, "Type" => "String"
-    response_field "password-digest", "Encoded user password", :scope => :attributes, "Type" => "String"
 
     let(:type) { "users" }
 
     let(:username) { "palvarado" }
     let(:email) { "palvarado@example.com" }
     let("photo-url") { "http://pixels.example.com/palvarado" }
-    let("password-digest") { "encodedpassword" }
+    let("password") { "my-very-difficult-password" }
+    let("password-confirmation") { "my-very-difficult-password" }
 
     let(:raw_post) { params.to_json }
 
@@ -81,6 +92,10 @@ RSpec.resource "Users" do
   end
 
   get "/v1/users/:id" do
+    before do
+      header 'Authorization', mytoken
+    end
+
     let(:id) { user.id }
 
     example_request "Getting a specific user" do
@@ -97,12 +112,17 @@ RSpec.resource "Users" do
   end
 
   patch "/v1/users/:id" do
+    before do
+      header 'Authorization', mytoken
+    end
 
     # http://jsonapi.org/format/#crud-updating
     parameter :type, "Resource type, allways be users", :required => true, :scope => :data
     parameter "username", 'Application user identifier', :required => true, :scope => [:data, :attributes]
     parameter "email", "User email", :required => true, :scope => [:data, :attributes]
     parameter "photo-url", "URL for user avatar", :required => false, :scope => [:data, :attributes]
+    parameter "password", "User password", :required => true, :scope => [:data, :attributes]
+    parameter "password-confirmation", "User password confirmation", :required => true, :scope => [:data, :attributes]
 
     parameter "id", <<-DESC, required: true, :scope => :data
       The id of the user.
@@ -124,6 +144,9 @@ RSpec.resource "Users" do
   end
 
   delete "/v1/users/:id" do
+    before do
+      header 'Authorization', mytoken
+    end
     let(:id) { user.id }
 
     example_request "Deleting an user" do

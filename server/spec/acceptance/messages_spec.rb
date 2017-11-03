@@ -1,7 +1,9 @@
 require 'acceptance_helper'
 
 RSpec.resource "Messages" do
-
+  let (:password) { "my-password" }
+  let(:token_user) { FactoryGirl.create(:user, password: password, password_confirmation: password) }
+  let(:mytoken) { AuthenticateUser.new(token_user.username, password).call.result[:token] }
   let(:message) { FactoryGirl.create(:message) }
 
   get "/v1/messages" do
@@ -13,6 +15,7 @@ RSpec.resource "Messages" do
       5.times do |i|
         FactoryGirl.create(:message)
       end
+      header 'Authorization', mytoken
     end
 
     example_request "Getting a list of messages" do
@@ -29,6 +32,10 @@ RSpec.resource "Messages" do
   end
 
   head "/v1/messages" do
+    before do
+      header 'Authorization', mytoken
+    end
+
     example_request "Getting the headers" do
       expect(response_headers["Cache-Control"]).to eq("max-age=0, private, must-revalidate")
       expect(response_headers["Content-Type"]).to eq("application/vnd.api+json")
@@ -39,6 +46,9 @@ RSpec.resource "Messages" do
   header "Accept", "application/vnd.api+json"
 
   post "/v1/messages" do
+    before do
+      header 'Authorization', mytoken
+    end
 
     # http://jsonapi.org/format/#crud-creating
     parameter :type, "Resource type, allways must be messages", :required => true, :scope => :data
@@ -97,6 +107,10 @@ RSpec.resource "Messages" do
   end
 
   get "/v1/messages/:id" do
+    before do
+      header 'Authorization', mytoken
+    end
+
     let(:id) { message.id }
 
     example_request "Getting a specific message" do
@@ -109,6 +123,9 @@ RSpec.resource "Messages" do
   end
 
   patch "/v1/messages/:id" do
+    before do
+      header 'Authorization', mytoken
+    end
 
     # http://jsonapi.org/format/#crud-updating
     parameter "id", <<-DESC, required: true, :scope => :data
@@ -158,6 +175,10 @@ RSpec.resource "Messages" do
   end
 
   delete "/v1/messages/:id" do
+    before do
+      header 'Authorization', mytoken
+    end
+
     let(:id) { message.id }
 
     example_request "Deleting a message" do

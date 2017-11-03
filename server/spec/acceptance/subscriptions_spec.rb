@@ -1,6 +1,9 @@
 require 'acceptance_helper'
 
 RSpec.resource "Subscriptions" do
+  let (:password) { "my-password" }
+  let(:token_user) { FactoryGirl.create(:user, password: password, password_confirmation: password) }
+  let(:mytoken) { AuthenticateUser.new(token_user.username, password).call.result[:token] }
 
   let(:subscription) { FactoryGirl.create(:subscription) }
 
@@ -13,6 +16,7 @@ RSpec.resource "Subscriptions" do
       5.times do |i|
         FactoryGirl.create(:subscription)
       end
+      header 'Authorization', mytoken
     end
 
     example_request "Getting a list of subscriptions" do
@@ -27,6 +31,10 @@ RSpec.resource "Subscriptions" do
   end
 
   head "/v1/subscriptions" do
+    before do
+      header 'Authorization', mytoken
+    end
+
     example_request "Getting the headers" do
       expect(response_headers["Cache-Control"]).to eq("max-age=0, private, must-revalidate")
       expect(response_headers["Content-Type"]).to eq("application/vnd.api+json")
@@ -37,6 +45,9 @@ RSpec.resource "Subscriptions" do
   header "Accept", "application/vnd.api+json"
 
   post "/v1/subscriptions" do
+    before do
+      header 'Authorization', mytoken
+    end
 
     # http://jsonapi.org/format/#crud-creating
     parameter :type, "Resource type, allways must be subscriptions", :required => true, :scope => :data
@@ -91,6 +102,10 @@ RSpec.resource "Subscriptions" do
   end
 
   get "/v1/subscriptions/:id" do
+    before do
+      header 'Authorization', mytoken
+    end
+
     let(:id) { subscription.id }
 
     example_request "Getting a specific subscription" do
@@ -103,6 +118,9 @@ RSpec.resource "Subscriptions" do
   end
 
   patch "/v1/subscriptions/:id" do
+    before do
+      header 'Authorization', mytoken
+    end
 
     # http://jsonapi.org/format/#crud-updating
     parameter :type, "Resource type, allways be subscriptions", :required => true, :scope => :data
@@ -152,6 +170,9 @@ RSpec.resource "Subscriptions" do
   end
 
   delete "/v1/subscriptions/:id" do
+    before do
+      header 'Authorization', mytoken
+    end
     let(:id) { subscription.id }
 
     example_request "Deleting a subscription" do
