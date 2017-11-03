@@ -1,8 +1,9 @@
 class ValidateRequestToken
   prepend SimpleCommand
 
-  def initialize(headers = {})
-    @headers = headers
+  def initialize(token = nil)
+    @token = token
+    errors.add :token, 'Missing token' unless @token
   end
 
   def call
@@ -11,23 +12,16 @@ class ValidateRequestToken
 
   private
 
-  attr_reader :headers
+  attr_reader :token
 
   def user_attrs
-    @user_attrs ||= decoded_token
-    @user_attrs || errors.add(:token, 'Invalid token') && nil
+    if token
+      @user_attrs ||= decoded_token
+      @user_attrs || errors.add(:token, 'Invalid token') && nil
+    end
   end
 
   def decoded_token
-    @decoded_token ||= Tokenizer.decode(authorization_header) if authorization_header
-  end
-
-  def authorization_header
-    if headers['Authorization'].present?
-      return headers['Authorization'].split(' ').last
-    else
-      errors.add :token, 'Missing token'
-    end
-    nil
+    @decoded_token ||= Tokenizer.decode(token)
   end
 end

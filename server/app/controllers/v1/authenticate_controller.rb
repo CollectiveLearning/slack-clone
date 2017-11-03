@@ -1,6 +1,6 @@
 module V1
   class AuthenticateController < ApplicationController
-    # skip_before_action :authenticate_request
+    skip_before_action :validate_request_token
 
     def login
       # params.require(:authenticate).permit(:username, :password)
