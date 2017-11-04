@@ -94,9 +94,23 @@ RSpec.resource "Subscriptions" do
 
       expect(status).to eq(201)
 
-      # puts "response_headers  "  + response_headers.to_s
       # puts "headers  "  + headers.to_s
+      # puts URI.parse(response_headers["location"]).path
+
       client.get(URI.parse(response_headers["location"]).path, {}, headers)
+      expect(status).to eq(200)
+
+      # puts "response_headers  "  + response_headers.to_s
+      # puts "body  "  + response_body
+      subscription_user_url = JSON.parse(response_body)["data"]["relationships"]["user"]["links"]["related"]
+
+      client.get(subscription_user_url, {}, headers)
+      expected_user_id = JSON.parse(response_body)["data"]["id"].to_s
+      # puts expected_user_id
+      # puts user[:data][:id]
+
+      expect(expected_user_id).to eq(user[:data][:id])
+
       expect(status).to eq(200)
     end
   end
