@@ -3,10 +3,15 @@ class ApplicationController < JSONAPI::ResourceController
 
   before_action :validate_request_token
 
-  # helper_method :current_user
-  attr_reader :current_user
+  # http://jsonapi-resources.com/v0.10/guide/resources.html#Context
+  def context
+    {current_user: current_user}
+  end
 
   private
+
+  # helper_method :current_user
+  attr_reader :current_user
 
   def validate_request_token
 
