@@ -53,7 +53,6 @@ RSpec.resource "Messages" do
     # http://jsonapi.org/format/#crud-creating
     parameter :type, "Resource type, allways must be messages", :required => true, :scope => :data
 
-    parameter "user", "User foreign key", :required => true, :scope => [:data, :relationships]
     parameter "channel", "Channel foreign key", :required => true, :scope => [:data, :relationships]
     parameter "content", "Message content", :scope => [:data, :attributes]
     parameter "kind", "Type of message (link, text, emoticon)", :required => true, :scope => [:data, :attributes]
@@ -73,15 +72,6 @@ RSpec.resource "Messages" do
           data: {
               type: "channels",
               id: persisted_channel.id.to_s
-          }
-      }
-    end
-
-    let "user" do
-      {
-          data: {
-              type: "users",
-              id: persisted_user.id.to_s
           }
       }
     end
@@ -135,7 +125,6 @@ RSpec.resource "Messages" do
     let(:id) { message.id }
 
     parameter :type, "Resource type, allways must be messages", :required => true, :scope => :data
-    parameter "user", "User foreign key", :required => true, :scope => [:data, :relationships]
     parameter "channel", "Channel foreign key", :required => true, :scope => [:data, :relationships]
     parameter "content", "Message content", :scope => [:data, :attributes]
     parameter "kind", "Type of message (link, text, emoticon)", :required => true, :scope => [:data, :attributes]
@@ -156,14 +145,6 @@ RSpec.resource "Messages" do
       }
     end
 
-    let "user" do
-      {
-          data: {
-              type: "users",
-              id: persisted_user.id.to_s
-          }
-      }
-    end
     let(:raw_post) { params.to_json }
 
     example_request "Updating an message" do

@@ -9,8 +9,12 @@ module V1
     has_one :channel
 
     class << self
+      def create(context)
+        MessageResource.new(Message.new(user_id: context[:current_user][:id]), nil)
+      end
+
       def creatable_fields(context)
-        super
+        super - [:user]
       end
       alias_method :updatable_fields, :creatable_fields
     end
