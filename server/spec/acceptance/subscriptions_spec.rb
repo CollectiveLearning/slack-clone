@@ -52,16 +52,13 @@ RSpec.resource "Subscriptions" do
     # http://jsonapi.org/format/#crud-creating
     parameter :type, "Resource type, allways must be subscriptions", :required => true, :scope => :data
 
-    parameter "user", "User foreign key", :required => true, :scope => [:data, :relationships]
     parameter "channel", "Channel foreign key", :required => true, :scope => [:data, :relationships]
 
-    response_field "user", "User foreign key", :scope => [:data, :relationships], "Type" => "String"
     response_field "channel", "Channel foreign key", :scope => [:data, :relationships], "Type" => "String"
 
 
     let(:type) { "subscriptions" }
 
-    let!(:persisted_user) { FactoryGirl.create(:user)}
     let!(:persisted_channel) { FactoryGirl.create(:channel)}
 
     let "channel" do
@@ -73,14 +70,6 @@ RSpec.resource "Subscriptions" do
       }
     end
 
-    let "user" do
-      {
-          data: {
-              type: "users",
-              id: persisted_user.id.to_s
-          }
-      }
-    end
     let(:raw_post) { params.to_json }
 
     example_request "Creating a subscription" do
@@ -106,10 +95,9 @@ RSpec.resource "Subscriptions" do
 
       client.get(subscription_user_url, {}, headers)
       expected_user_id = JSON.parse(response_body)["data"]["id"].to_s
-      # puts expected_user_id
-      # puts user[:data][:id]
 
-      expect(expected_user_id).to eq(user[:data][:id])
+      # puts expected_user_id
+      expect(expected_user_id).to eq(token_user.id.to_s)
 
       expect(status).to eq(200)
     end
@@ -145,7 +133,6 @@ RSpec.resource "Subscriptions" do
 
     let(:id) { subscription.id }
 
-    parameter "user", "User foreign key", :required => true, :scope => [:data, :relationships]
     parameter "channel", "Channel foreign key", :required => true, :scope => [:data, :relationships]
 
     response_field "user", "User foreign key", :scope => [:data, :relationships], "Type" => "String"
@@ -153,7 +140,6 @@ RSpec.resource "Subscriptions" do
 
     let(:type) { "subscriptions" }
 
-    let!(:persisted_user) { FactoryGirl.create(:user)}
     let!(:persisted_channel) { FactoryGirl.create(:channel)}
 
     let "channel" do
@@ -165,14 +151,6 @@ RSpec.resource "Subscriptions" do
       }
     end
 
-    let "user" do
-      {
-          data: {
-              type: "users",
-              id: persisted_user.id.to_s
-          }
-      }
-    end
     let(:raw_post) { params.to_json }
 
     example_request "Updating an subscription" do
