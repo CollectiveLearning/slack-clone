@@ -7,7 +7,7 @@ RSpec.describe Channel, type: :model do
 
   describe "Validations" do
     it { is_expected.to validate_presence_of :name }
-    it { is_expected.to validate_presence_of :private }
+    it { is_expected.to validate_inclusion_of(:private).in_array([true, false])}
 
     it "validates the uniqueness of name" do
       original = FactoryGirl.create(:channel)
